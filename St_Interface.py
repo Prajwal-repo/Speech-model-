@@ -1,6 +1,7 @@
 import streamlit as st
 import whisper
 import tempfile
+from llama_model import LlamaModel
 
 st.title("Audio Transcription App")
 st.write("Upload a 1-minute audio file to get the transcription.")
@@ -8,6 +9,8 @@ st.write("Upload a 1-minute audio file to get the transcription.")
 uploaded_file = st.file_uploader("Upload an audio file", type=["wav", "mp3"])
 
 model = whisper.load_model("base")
+
+llama = LlamaModel()
 
 if uploaded_file is not None:
     st.audio(uploaded_file, format="audio/wav")
@@ -20,9 +23,19 @@ if uploaded_file is not None:
     if st.button("Transcribe Audio"):
         try:
             result = model.transcribe(temp_file_path)
+            transcription_text = result["text"]
             st.success("Transcription complete")
-            st.markdown(result["text"])  
+            st.markdown(transcription_text)  
         except Exception as e:
             st.error(f"Error during transcription: {str(e)}")
+
+    if st.button("Generate response"):
+        try:
+            llama_response = llama.generate_response(transcription_text)
+            st.success("Llama model response")
+            st.markdown(llama_response)
+        except Exception as e:
+            st.error(f"Error during response generation: {str(e)}")
 else:
     st.error("Please upload a valid audio file")
+
