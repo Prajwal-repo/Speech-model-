@@ -12,14 +12,13 @@ class LlamaModel:
         
         model = AutoModelForCausalLM.from_config(config)
 
-        # Load model with full disk offloading
         self.model = load_checkpoint_and_dispatch(
             model,
             checkpoint=model_name,
-            device_map="cuda",  # Will distribute across CPU/GPU
-            offload_folder="offload_model",  # Saves to disk instead of RAM
-            offload_state_dict=True,  # Offloads weights as well
-            dtype=torch.bfloat16,  # More memory-efficient than float16
+            device_map="cuda",  
+            offload_folder="offload_model",  
+            offload_state_dict=True, 
+            dtype=torch.bfloat16, 
         )
 
     def generate_response(self, text):
