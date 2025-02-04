@@ -1,5 +1,6 @@
 import streamlit as st
 import whisper
+import torch
 import tempfile
 from llama_model import LlamaModel
 from gemini_model import GeminiModel
@@ -13,7 +14,7 @@ model = whisper.load_model("base")
 
 gemini = GeminiModel()
 
-#llama = LlamaModel()
+llama = LlamaModel()
 
 if "transcription_text" not in st.session_state:
     st.session_state.transcription_text = None
@@ -35,13 +36,14 @@ if uploaded_file is not None:
         except Exception as e:
             st.error(f"Error during transcription: {str(e)}")
 
-    if st.button("Generate response with Llama Model"):
-        try:
-            llama_response = llama.generate_response(transcription_text)
-            st.success("Llama model response")
-            st.markdown(llama_response)
-        except Exception as e:
-            st.error(f"Error during response generation: {str(e)}")
+    if st.session_state.transcription_text:
+        if st.button("Generate response with Llama Model"):
+            try:
+                llama_response = llama.generate_response(st.session_state.transcription_text)
+                st.success("Llama model response")
+                st.markdown(llama_response)
+            except Exception as e:
+                st.error(f"Error during response generation: {str(e)}")
     
     if st.session_state.transcription_text:
         if st.button("Generate response with Gemini Model"):
