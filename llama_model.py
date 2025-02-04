@@ -3,7 +3,7 @@ from accelerate import init_empty_weights, load_checkpoint_and_dispatch
 import torch
 
 class LlamaModel:
-    def __init__(self, model_name="AtlaAI/Selene-1-Mini-Llama-3.1-8B", hf_token="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"):
+    def __init__(self, model_name="AtlaAI/Selene-1-Mini-Llama-3.1-8B", hf_token=""):
         self.model_name = model_name
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, token=hf_token)
 
